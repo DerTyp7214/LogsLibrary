@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Logs</string>
+    <string name="share_crash_url">Share Crash-Url</string>
+    <string name="send_to">Send to</string>
+    <string name="menu_action_delete">Delete</string>
+    <string name="app_crash">App crashed</string>
+    <string name="app_crashed">Application Crashed</string>
+</resources>
