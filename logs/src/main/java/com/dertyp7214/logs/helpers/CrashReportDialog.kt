@@ -48,7 +48,7 @@ class CrashReportDialog : AppCompatActivity() {
 
                     override fun onFail(message: String, e: Exception) {
                         dialog.dismiss()
-                        Logs.log(Logs.Companion.Type.ERROR, "Dogbin Upload", Log.getStackTraceString(e))
+                        Logger.log(Logger.Companion.Type.ERROR, "Dogbin Upload", Log.getStackTraceString(e))
                         finish()
                     }
                 })
