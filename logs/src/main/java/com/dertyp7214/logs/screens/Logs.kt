@@ -3,7 +3,6 @@ package com.dertyp7214.logs.screens
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
@@ -25,7 +24,7 @@ class Logs : AppCompatActivity() {
         }
 
         val itemDelete =
-            toolbar.menu.add(0, R.id.menu_delete, Menu.NONE, getString(R.string.menu_action_delete))
+            toolbar.menu.add(0, R.id.menu_delete, 0, R.string.menu_action_delete)
         itemDelete.setIcon(R.drawable.ic_action_delete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         itemDelete.setOnMenuItemClickListener {
             getSharedPreferences("logs", Context.MODE_PRIVATE).edit {

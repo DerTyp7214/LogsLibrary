@@ -5,73 +5,22 @@
 
 package com.dertyp7214.logs.helpers
 
-import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
-import android.content.Intent
-import android.graphics.Color
-import android.util.Log
 import androidx.annotation.ColorInt
-import androidx.core.content.edit
-import com.dertyp7214.logs.R
-import org.json.JSONObject
 
+@Deprecated("Use 'Logger' instead", ReplaceWith("Logs", "Logger"), DeprecationLevel.WARNING)
 class Logs {
     companion object {
-        @SuppressLint("StaticFieldLeak")
-        lateinit var context: Context
-
-        var primaryColor = Color.GRAY
-        var accentColor = Color.GRAY
-
         fun log(type: Type, tag: String, body: Any?) {
-            when (type) {
-                Type.DEBUG -> Log.d(tag, body.toString())
-                Type.ERROR -> Log.e(tag, body.toString())
-                Type.INFO -> Log.i(tag, body.toString())
-                Type.CRASH -> Log.e(tag, body.toString())
-                Type.ASSERT -> Log.wtf(tag, body.toString())
-                Type.WARN -> Log.w(tag, body.toString())
-            }
-            try {
-                val sharedPreferences = context.getSharedPreferences("logs", MODE_PRIVATE)
-                sharedPreferences.edit {
-                    putString(
-                        System.currentTimeMillis().toString(),
-                        JSONObject("{\"type\": \"${type.name}\", \"body\": \"${body.toString()}\"}").toString()
-                    )
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            Logger.log(Type.getByName(type), tag, body)
         }
 
         fun init(application: Application) {
-            context = application.applicationContext
-            setUpCrashHelper(application.applicationContext)
-            this.primaryColor = context.resources.getColor(R.color.colorPrimary)
-            this.accentColor = context.resources.getColor(R.color.colorAccent)
+            init(application)
         }
 
         fun init(application: Application, @ColorInt primaryColor: Int, @ColorInt accentColor: Int) {
-            init(application)
-            this.primaryColor = primaryColor
-            this.accentColor = accentColor
-        }
-
-        private fun setUpCrashHelper(applicationContext: Context) {
-            Thread.setDefaultUncaughtExceptionHandler { t, e ->
-                Logs.log(Logs.Companion.Type.CRASH, t?.name ?: "", Log.getStackTraceString(e ?: Error()))
-                val dialogIntent = Intent(applicationContext, CrashReportDialog::class.java)
-                dialogIntent.putExtra("CRASH_LOG", Log.getStackTraceString(e ?: Error()))
-                dialogIntent.putExtra("CRASH_MESSAGE", e?.message)
-                dialogIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                applicationContext.startActivity(dialogIntent)
-                Log.d("HIIII", "CRASH")
-                android.os.Process.killProcess(android.os.Process.myPid())
-                System.exit(10)
-            }
+            init(application, primaryColor, accentColor)
         }
 
         enum class Type {
@@ -80,7 +29,19 @@ class Logs {
             WARN,
             ASSERT,
             INFO,
-            CRASH
+            CRASH;
+            companion object {
+                fun getByName(type: Type): Logger.Companion.Type {
+                    return when (type) {
+                        DEBUG -> Logger.Companion.Type.DEBUG
+                        ERROR -> Logger.Companion.Type.ERROR
+                        WARN -> Logger.Companion.Type.WARN
+                        ASSERT -> Logger.Companion.Type.ASSERT
+                        INFO -> Logger.Companion.Type.INFO
+                        CRASH -> Logger.Companion.Type.CRASH
+                    }
+                }
+            }
         }
     }
 }
