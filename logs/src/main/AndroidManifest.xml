@@ -2,10 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.dertyp7214.logs">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application>
         <activity
                 android:name=".screens.Logs"
-                android:theme="@style/AppTheme">
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

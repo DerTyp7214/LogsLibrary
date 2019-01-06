@@ -41,6 +41,12 @@ class Logger {
             }
         }
 
+        fun clear() {
+            context.getSharedPreferences("logs", Context.MODE_PRIVATE).edit {
+                clear()
+            }
+        }
+
         fun init(application: Application) {
             context = application.applicationContext
             setUpCrashHelper(application.applicationContext)

@@ -57,25 +57,7 @@ class CrashReportDialog : AppCompatActivity() {
         dialog.show()
         dialog.getButton(BUTTON_POSITIVE).setBackgroundColor(Color.TRANSPARENT)
         dialog.getButton(BUTTON_NEUTRAL).setBackgroundColor(Color.TRANSPARENT)
-        dialog.getButton(BUTTON_POSITIVE).setTextColor(Logs.accentColor)
-        dialog.getButton(BUTTON_NEUTRAL).setTextColor(Logs.accentColor)
-    }
-
-    private fun getStatusBarHeight(): Int {
-        var result = 0
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId > 0) {
-            result = resources.getDimensionPixelSize(resourceId)
-        }
-        return result
-    }
-
-    private fun getNavBarHeight(): Int {
-        var result = 0
-        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        if (resourceId > 0) {
-            result = resources.getDimensionPixelSize(resourceId)
-        }
-        return result
+        dialog.getButton(BUTTON_POSITIVE).setTextColor(Logger.accentColor)
+        dialog.getButton(BUTTON_NEUTRAL).setTextColor(Logger.accentColor)
     }
 }

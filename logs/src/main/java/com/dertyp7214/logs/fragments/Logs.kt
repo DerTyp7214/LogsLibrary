@@ -17,7 +17,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -26,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dertyp7214.logs.R
 import com.dertyp7214.logs.helpers.DogbinUtils
+import com.dertyp7214.logs.helpers.Logger
 import com.dertyp7214.logs.helpers.Logs
 import com.dertyp7214.logs.helpers.Ui
 import org.json.JSONObject
@@ -35,7 +39,6 @@ import kotlin.collections.ArrayList
 
 class Logs() : Fragment() {
 
-    private lateinit var activity: Activity
     private var primaryColor: Int = Color.GRAY
     private var accentColor: Int = Color.GRAY
 
@@ -53,14 +56,12 @@ class Logs() : Fragment() {
         return list
     }
 
-    constructor(activity: Activity) : this() {
-        this.activity = activity
-        primaryColor = Logs.primaryColor
-        accentColor = Logs.accentColor
+    init {
+        primaryColor = Logger.primaryColor
+        accentColor = Logger.accentColor
     }
 
-    constructor(activity: Activity, @ColorInt primaryColor: Int, @ColorInt accentColor: Int) : this() {
-        this.activity = activity
+    constructor(@ColorInt primaryColor: Int, @ColorInt accentColor: Int) : this() {
         this.primaryColor = primaryColor
         this.accentColor = accentColor
     }
@@ -68,7 +69,7 @@ class Logs() : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.logs, container, false)
 
-        val sharedPreferences = activity.getSharedPreferences("logs", Context.MODE_PRIVATE)
+        val sharedPreferences = activity!!.getSharedPreferences("logs", Context.MODE_PRIVATE)
 
         var logs = ArrayList<Pair<String, Pair<String, String>>>()
 
@@ -88,7 +89,7 @@ class Logs() : Fragment() {
         }).reversed())
         val logList: ArrayList<Pair<String, Pair<String, String>>> =
             logs.clone() as ArrayList<Pair<String, Pair<String, String>>>
-        val adapter = LogsAdapter(activity, logList)
+        val adapter = LogsAdapter(activity!!, logList)
         rv.adapter = adapter
         val layoutManager = LinearLayoutManager(activity)
         val dividerItemDecoration = DividerItemDecoration(

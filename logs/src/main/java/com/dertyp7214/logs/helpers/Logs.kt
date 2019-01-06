@@ -16,11 +16,11 @@ class Logs {
         }
 
         fun init(application: Application) {
-            init(application)
+            Logger.init(application)
         }
 
         fun init(application: Application, @ColorInt primaryColor: Int, @ColorInt accentColor: Int) {
-            init(application, primaryColor, accentColor)
+            Logger.init(application, primaryColor, accentColor)
         }
 
         enum class Type {
