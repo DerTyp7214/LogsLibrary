@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dertyp7214.logs.R
 import com.dertyp7214.logs.helpers.DogbinUtils
 import com.dertyp7214.logs.helpers.Logger
-import com.dertyp7214.logs.helpers.Logs
 import com.dertyp7214.logs.helpers.Ui
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -113,32 +112,32 @@ class Logs() : Fragment() {
                 when (list[position]) {
                     info -> {
                         logList.clear()
-                        logList.addAll(filterByType(logs, Logs.Companion.Type.INFO))
+                        logList.addAll(filterByType(logs, Logger.Companion.Type.INFO))
                         adapter.notifyDataSetChanged()
                     }
                     debug -> {
                         logList.clear()
-                        logList.addAll(filterByType(logs, Logs.Companion.Type.DEBUG))
+                        logList.addAll(filterByType(logs, Logger.Companion.Type.DEBUG))
                         adapter.notifyDataSetChanged()
                     }
                     error -> {
                         logList.clear()
-                        logList.addAll(filterByType(logs, Logs.Companion.Type.ERROR))
+                        logList.addAll(filterByType(logs, Logger.Companion.Type.ERROR))
                         adapter.notifyDataSetChanged()
                     }
                     crash -> {
                         logList.clear()
-                        logList.addAll(filterByType(logs, Logs.Companion.Type.CRASH))
+                        logList.addAll(filterByType(logs, Logger.Companion.Type.CRASH))
                         adapter.notifyDataSetChanged()
                     }
                     assert -> {
                         logList.clear()
-                        logList.addAll(filterByType(logs, Logs.Companion.Type.ASSERT))
+                        logList.addAll(filterByType(logs, Logger.Companion.Type.ASSERT))
                         adapter.notifyDataSetChanged()
                     }
                     warn -> {
                         logList.clear()
-                        logList.addAll(filterByType(logs, Logs.Companion.Type.WARN))
+                        logList.addAll(filterByType(logs, Logger.Companion.Type.WARN))
                         adapter.notifyDataSetChanged()
                     }
                     verbose -> {
@@ -155,7 +154,7 @@ class Logs() : Fragment() {
 
     private fun filterByType(
         list: ArrayList<Pair<String, Pair<String, String>>>,
-        type: Logs.Companion.Type
+        type: Logger.Companion.Type
     ): ArrayList<Pair<String, Pair<String, String>>> {
         return list.filter {
             val t = it.second.second
@@ -163,14 +162,14 @@ class Logs() : Fragment() {
         } as ArrayList<Pair<String, Pair<String, String>>>
     }
 
-    private fun stringToType(type: String): Logs.Companion.Type {
+    private fun stringToType(type: String): Logger.Companion.Type {
         return when (type) {
-            Logs.Companion.Type.ERROR.name -> Logs.Companion.Type.ERROR
-            Logs.Companion.Type.DEBUG.name -> Logs.Companion.Type.DEBUG
-            Logs.Companion.Type.CRASH.name -> Logs.Companion.Type.CRASH
-            Logs.Companion.Type.ASSERT.name -> Logs.Companion.Type.ASSERT
-            Logs.Companion.Type.WARN.name -> Logs.Companion.Type.WARN
-            else -> Logs.Companion.Type.INFO
+            Logger.Companion.Type.ERROR.name -> Logger.Companion.Type.ERROR
+            Logger.Companion.Type.DEBUG.name -> Logger.Companion.Type.DEBUG
+            Logger.Companion.Type.CRASH.name -> Logger.Companion.Type.CRASH
+            Logger.Companion.Type.ASSERT.name -> Logger.Companion.Type.ASSERT
+            Logger.Companion.Type.WARN.name -> Logger.Companion.Type.WARN
+            else -> Logger.Companion.Type.INFO
         }
     }
 
@@ -193,7 +192,7 @@ class Logs() : Fragment() {
             holder.time.text = title
             holder.body.text = pair.second.first
             holder.type.text = pair.second.second
-            if (pair.second.second == Logs.Companion.Type.ERROR.name || pair.second.second == Logs.Companion.Type.CRASH.name)
+            if (pair.second.second == Logger.Companion.Type.ERROR.name || pair.second.second == Logger.Companion.Type.CRASH.name)
                 holder.type.setTextColor(activity.resources.getColor(android.R.color.holo_red_light))
             else
                 holder.type.setTextColor(Ui.getAttrColor(activity, android.R.attr.textColorPrimary))
@@ -206,7 +205,7 @@ class Logs() : Fragment() {
                     .setPositiveButton(activity.getString(android.R.string.ok)) { dialog, _ -> dialog.dismiss() }
                     .setTitle(title)
                     .setMessage(pair.second.first)
-                if (pair.second.second == Logs.Companion.Type.CRASH.name)
+                if (pair.second.second == Logger.Companion.Type.CRASH.name)
                     builder.setNeutralButton(activity.getString(R.string.share_crash_url)) { dialog, _ ->
                         DogbinUtils.upload(pair.second.first, object : DogbinUtils.UploadResultCallback {
                             override fun onSuccess(url: String) {
@@ -226,7 +225,7 @@ class Logs() : Fragment() {
 
                             override fun onFail(message: String, e: Exception) {
                                 dialog.dismiss()
-                                Logs.log(Logs.Companion.Type.ERROR, "Dogbin Upload", Log.getStackTraceString(e))
+                                Logger.log(Logger.Companion.Type.ERROR, "Dogbin Upload", Log.getStackTraceString(e))
                             }
                         })
                     }

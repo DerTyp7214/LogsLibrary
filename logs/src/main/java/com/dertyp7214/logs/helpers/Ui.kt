@@ -17,7 +17,7 @@ class Ui {
                 ta.recycle()
                 colorAccent
             } catch (e: Exception) {
-                Logs.log(Logs.Companion.Type.ERROR, "getAttrColor", e.message)
+                Logger.log(Logger.Companion.Type.ERROR, "getAttrColor", e.message)
                 Color.RED
             }
         }
