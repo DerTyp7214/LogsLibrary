@@ -23,6 +23,7 @@ class CrashReportDialog : AppCompatActivity() {
 
         val log = intent?.extras?.getString("CRASH_LOG")
         val message = intent?.extras?.getString("CRASH_MESSAGE")
+        Logger.log(Logger.Companion.Type.CRASH, log ?: "", message ?: "", this)
 
         title = ""
 

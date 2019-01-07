@@ -8,7 +8,7 @@ package com.dertyp7214.logs.helpers
 import android.app.Application
 import androidx.annotation.ColorInt
 
-@Deprecated("Use 'Logger' instead", ReplaceWith("Logs", "Logger"), DeprecationLevel.WARNING)
+@Deprecated("Use 'Logger' instead", ReplaceWith("Logs", "Logger"), DeprecationLevel.ERROR)
 class Logs {
     companion object {
         fun log(type: Type, tag: String, body: Any?) {

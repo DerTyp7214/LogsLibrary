@@ -19,7 +19,7 @@ class Logger {
         var primaryColor = Color.GRAY
         var accentColor = Color.GRAY
 
-        fun log(type: Type, tag: String, body: Any?) {
+        fun log(type: Type, tag: String, body: Any?, c: Context = context) {
             when (type) {
                 Type.DEBUG -> Log.d(tag, body.toString())
                 Type.ERROR -> Log.e(tag, body.toString())
@@ -29,7 +29,7 @@ class Logger {
                 Type.WARN -> Log.w(tag, body.toString())
             }
             try {
-                val sharedPreferences = context.getSharedPreferences("logs", Context.MODE_PRIVATE)
+                val sharedPreferences = c.getSharedPreferences("logs", Context.MODE_PRIVATE)
                 sharedPreferences.edit {
                     putString(
                         System.currentTimeMillis().toString(),
@@ -62,7 +62,6 @@ class Logger {
 
         private fun setUpCrashHelper(applicationContext: Context) {
             Thread.setDefaultUncaughtExceptionHandler { t, e ->
-                Logger.log(Logger.Companion.Type.CRASH, t?.name ?: "", Log.getStackTraceString(e ?: Error()))
                 val dialogIntent = Intent(applicationContext, CrashReportDialog::class.java)
                 dialogIntent.putExtra("CRASH_LOG", Log.getStackTraceString(e ?: Error()))
                 dialogIntent.putExtra("CRASH_MESSAGE", e?.message)

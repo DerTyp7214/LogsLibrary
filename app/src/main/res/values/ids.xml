@@ -2,4 +2,5 @@
 <resources>
     <item name="menu_open" type="id"/>
     <item name="menu_clear" type="id"/>
+    <item name="menu_crash" type="id"/>
 </resources>

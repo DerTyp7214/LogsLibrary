@@ -13,13 +13,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        com.dertyp7214.logs.helpers.Logs.log(com.dertyp7214.logs.helpers.Logs.Companion.Type.CRASH, "C", "Crash")
-        com.dertyp7214.logs.helpers.Logs.log(com.dertyp7214.logs.helpers.Logs.Companion.Type.DEBUG, "D", "Debug")
-        com.dertyp7214.logs.helpers.Logs.log(com.dertyp7214.logs.helpers.Logs.Companion.Type.WARN, "W", "Warn")
-        com.dertyp7214.logs.helpers.Logs.log(com.dertyp7214.logs.helpers.Logs.Companion.Type.ASSERT, "A", "Assert")
-        com.dertyp7214.logs.helpers.Logs.log(com.dertyp7214.logs.helpers.Logs.Companion.Type.ERROR, "E", "Error")
-        com.dertyp7214.logs.helpers.Logs.log(com.dertyp7214.logs.helpers.Logs.Companion.Type.INFO, "I", "Info")
-
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.frame, com.dertyp7214.logs.fragments.Logs())
             commit()
@@ -27,6 +20,10 @@ class MainActivity : AppCompatActivity() {
 
         toolbar2.menu.add(0, R.id.menu_open, 0, "Open").setOnMenuItemClickListener {
             startActivity(Intent(this, Logs::class.java))
+            true
+        }
+        toolbar2.menu.add(0, R.id.menu_crash, 0, "Crash").setOnMenuItemClickListener {
+            val i = 55/0
             true
         }
         toolbar2.menu.add(0, R.id.menu_clear, 0, "Clear").setOnMenuItemClickListener {
