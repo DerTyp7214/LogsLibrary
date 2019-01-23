@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.frame, com.dertyp7214.logs.fragments.Logs())
+            replace(R.id.frame, Preferences())
             commit()
         }
 
