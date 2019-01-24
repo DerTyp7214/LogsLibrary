@@ -34,8 +34,8 @@ class LogMode : ListPreference {
     private fun init() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(Logger.context)
         setDefaultValue("VERBOSE")
-        entries = arrayOf("ASSERT", "INFO", "WARN", "DEBUG", "ERROR", "CRASH", "VERBOSE")
-        entryValues = arrayOf("ASSERT", "INFO", "WARN", "DEBUG", "ERROR", "CRASH", "VERBOSE")
+        entries = arrayOf("VERBOSE", "ASSERT", "INFO", "WARN", "DEBUG", "ERROR", "CRASH")
+        entryValues = arrayOf("VERBOSE", "ASSERT", "INFO", "WARN", "DEBUG", "ERROR", "CRASH")
         key = "logMode"
         title = "Log-mode (${preferences.getString(key, "VERBOSE")})"
         setOnPreferenceChangeListener { _, newValue ->

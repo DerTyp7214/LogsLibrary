@@ -36,21 +36,21 @@ class Logger {
             val mode =
                 parseLogMode(PreferenceManager.getDefaultSharedPreferences(context).getString("logMode", "VERBOSE")!!)
             when {
-                type == Type.CRASH && mode >= 6 -> Log.e(tag, body.toString())
-                type == Type.ERROR && mode >= 5 -> Log.e(tag, body.toString())
-                type == Type.DEBUG && mode >= 4 -> Log.d(tag, body.toString())
-                type == Type.WARN && mode >= 3 -> Log.w(tag, body.toString())
-                type == Type.INFO && mode >= 2 -> Log.i(tag, body.toString())
-                type == Type.ASSERT && mode >= 1 -> Log.wtf(tag, body.toString())
+                type == Type.CRASH && mode >= 1 -> Log.e(tag, body.toString())
+                type == Type.ERROR && mode >= 2 -> Log.e(tag, body.toString())
+                type == Type.DEBUG && mode >= 3 -> Log.d(tag, body.toString())
+                type == Type.WARN && mode >= 4 -> Log.w(tag, body.toString())
+                type == Type.INFO && mode >= 5 -> Log.i(tag, body.toString())
+                type == Type.ASSERT && mode >= 6 -> Log.wtf(tag, body.toString())
             }
             try {
                 val sharedPreferences = c.getSharedPreferences("logs", Context.MODE_PRIVATE)
-                if ((type == Type.CRASH && mode >= 6)
-                    || (type == Type.ERROR && mode >= 5)
-                    || (type == Type.DEBUG && mode >= 4)
-                    || (type == Type.WARN && mode >= 3)
-                    || (type == Type.INFO && mode >= 2)
-                    || (type == Type.ASSERT && mode >= 1)
+                if ((type == Type.CRASH && mode >= 1)
+                    || (type == Type.ERROR && mode >= 2)
+                    || (type == Type.DEBUG && mode >= 3)
+                    || (type == Type.WARN && mode >= 4)
+                    || (type == Type.INFO && mode >= 5)
+                    || (type == Type.ASSERT && mode >= 6)
                 ) {
                     sharedPreferences.edit {
                         putString(
