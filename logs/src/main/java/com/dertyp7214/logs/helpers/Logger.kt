@@ -22,12 +22,12 @@ class Logger {
 
         private fun parseLogMode(mode: String): Int {
             return when (mode) {
-                "CRASH" -> 6
-                "ERROR" -> 5
-                "DEBUG" -> 4
-                "WARN" -> 3
-                "INFO" -> 2
-                "ASSERT" -> 1
+                "CRASH" -> 1
+                "ERROR" -> 2
+                "DEBUG" -> 3
+                "WARN" -> 4
+                "INFO" -> 5
+                "ASSERT" -> 6
                 else -> 7
             }
         }
@@ -36,12 +36,13 @@ class Logger {
             val mode =
                 parseLogMode(PreferenceManager.getDefaultSharedPreferences(context).getString("logMode", "VERBOSE")!!)
             when {
-                type == Type.CRASH && mode >= 1 -> Log.e(tag, body.toString())
+                type == Type.CRASH && mode >= 1 -> Log.wtf(tag, body.toString())
                 type == Type.ERROR && mode >= 2 -> Log.e(tag, body.toString())
                 type == Type.DEBUG && mode >= 3 -> Log.d(tag, body.toString())
                 type == Type.WARN && mode >= 4 -> Log.w(tag, body.toString())
                 type == Type.INFO && mode >= 5 -> Log.i(tag, body.toString())
-                type == Type.ASSERT && mode >= 6 -> Log.wtf(tag, body.toString())
+                type == Type.ASSERT && mode >= 6 -> Log.i(tag, body.toString())
+                type == Type.VERBOSE && mode >= 7 -> Log.v(tag, body.toString())
             }
             try {
                 val sharedPreferences = c.getSharedPreferences("logs", Context.MODE_PRIVATE)
@@ -51,6 +52,7 @@ class Logger {
                     || (type == Type.WARN && mode >= 4)
                     || (type == Type.INFO && mode >= 5)
                     || (type == Type.ASSERT && mode >= 6)
+                    || (type == Type.VERBOSE && mode >= 7)
                 ) {
                     sharedPreferences.edit {
                         putString(
@@ -101,7 +103,8 @@ class Logger {
             WARN,
             ASSERT,
             INFO,
-            CRASH
+            CRASH,
+            VERBOSE
         }
     }
 }

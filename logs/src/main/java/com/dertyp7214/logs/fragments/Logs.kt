@@ -169,7 +169,8 @@ class Logs() : Fragment() {
             Logger.Companion.Type.CRASH.name -> Logger.Companion.Type.CRASH
             Logger.Companion.Type.ASSERT.name -> Logger.Companion.Type.ASSERT
             Logger.Companion.Type.WARN.name -> Logger.Companion.Type.WARN
-            else -> Logger.Companion.Type.INFO
+            Logger.Companion.Type.INFO.name -> Logger.Companion.Type.INFO
+            else -> Logger.Companion.Type.VERBOSE
         }
     }
 
