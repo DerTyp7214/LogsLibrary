@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.preference.PreferenceManager
+import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.core.content.edit
@@ -57,7 +58,7 @@ class Logger {
                     sharedPreferences.edit {
                         putString(
                             System.currentTimeMillis().toString(),
-                            JSONObject("{\"type\": \"${type.name}\", \"body\": \"${body.toString()}\"}").toString()
+                            JSONObject("{\"type\": \"${type.name}\", \"body\": \"${TextUtils.htmlEncode(body.toString())}\"}").toString()
                         )
                     }
                 }
