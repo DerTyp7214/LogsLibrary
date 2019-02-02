@@ -6,4 +6,5 @@
 
 <resources>
     <item name="menu_delete" type="id"/>
+    <item name="bottomSheetPreferenceItemId" type="id"/>
 </resources>

@@ -5,4 +5,5 @@
     <string name="menu_action_delete">Delete</string>
     <string name="app_crash">App crashed</string>
     <string name="app_crashed">Application Crashed</string>
+    <string name="no_entries">No entries</string>
 </resources>

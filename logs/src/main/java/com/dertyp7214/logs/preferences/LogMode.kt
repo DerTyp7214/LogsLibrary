@@ -4,10 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.preference.PreferenceManager
 import android.util.AttributeSet
-import androidx.preference.ListPreference
 import com.dertyp7214.logs.helpers.Logger
 
-class LogMode : ListPreference {
+class LogMode : BottomSheetPreference {
     @SuppressLint("NewApi")
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(
         context,
@@ -31,7 +30,7 @@ class LogMode : ListPreference {
         init()
     }
 
-    private fun init() {
+    override fun init() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(Logger.context)
         setDefaultValue("VERBOSE")
         entries = arrayOf("VERBOSE", "ASSERT", "INFO", "WARN", "DEBUG", "ERROR", "CRASH")
