@@ -5,6 +5,7 @@ import android.content.Context
 import android.preference.PreferenceManager
 import android.util.AttributeSet
 import com.dertyp7214.logs.helpers.Logger
+import com.dertyp7214.preferencesplus.preferences.BottomSheetPreference
 
 class LogMode : BottomSheetPreference {
     @SuppressLint("NewApi")
@@ -14,23 +15,24 @@ class LogMode : BottomSheetPreference {
         defStyleAttr,
         defStyleRes
     ) {
-        init()
+        init(attrs)
     }
 
     @SuppressLint("NewApi")
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init()
+        init(attrs)
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init()
+        init(attrs)
     }
 
     constructor(context: Context) : super(context) {
-        init()
+        init(null)
     }
 
-    override fun init() {
+    override fun init(attrs: AttributeSet?) {
+        super.init(attrs)
         val preferences = PreferenceManager.getDefaultSharedPreferences(Logger.context)
         setDefaultValue("VERBOSE")
         entries = arrayOf("VERBOSE", "ASSERT", "INFO", "WARN", "DEBUG", "ERROR", "CRASH")
