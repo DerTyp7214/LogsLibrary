@@ -17,14 +17,13 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue.COMPLEX_UNIT_SP
+import android.view.Gravity.END
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import android.widget.LinearLayout.HORIZONTAL
-import android.widget.LinearLayout.VERTICAL
+import android.widget.LinearLayout.*
 import androidx.annotation.ColorInt
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.setPadding
 import androidx.core.widget.NestedScrollView
@@ -92,13 +91,13 @@ class Logs() : Fragment() {
             o1.first.toLong().compareTo(o2.first.toLong())
         }).reversed())
         val logList: ArrayList<Pair<String, Pair<String, String>>> =
-            logs.clone() as ArrayList<Pair<String, Pair<String, String>>>
+                logs.clone() as ArrayList<Pair<String, Pair<String, String>>>
         val adapter = LogsAdapter(activity!!, logList)
         rv.adapter = adapter
         val layoutManager = LinearLayoutManager(activity)
         val dividerItemDecoration = DividerItemDecoration(
-            rv.context,
-            layoutManager.orientation
+                rv.context,
+                layoutManager.orientation
         )
         rv.layoutManager = layoutManager
         rv.addItemDecoration(dividerItemDecoration)
@@ -158,8 +157,8 @@ class Logs() : Fragment() {
     }
 
     private fun filterByType(
-        list: ArrayList<Pair<String, Pair<String, String>>>,
-        type: Logger.Companion.Type
+            list: ArrayList<Pair<String, Pair<String, String>>>,
+            type: Logger.Companion.Type
     ): ArrayList<Pair<String, Pair<String, String>>> {
         return list.filter {
             val t = it.second.second
@@ -180,7 +179,7 @@ class Logs() : Fragment() {
     }
 
     private class LogsAdapter(private val activity: Activity, val logs: List<Pair<String, Pair<String, String>>>) :
-        RecyclerView.Adapter<LogsAdapter.ViewHolder>() {
+            RecyclerView.Adapter<LogsAdapter.ViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val v = LayoutInflater.from(activity).inflate(R.layout.log_item, parent, false)
@@ -206,45 +205,11 @@ class Logs() : Fragment() {
             holder.layout.setOnClickListener {
                 val size = Point()
                 activity.windowManager.defaultDisplay.getSize(size)
-                val width = size.x
                 BottomSheet(
-                    title,
-                    pair.second.first,
-                    false
+                        title,
+                        pair.second.first,
+                        false
                 ).show((activity as AppCompatActivity).supportFragmentManager, "")
-                val builder = AlertDialog.Builder(activity)
-                    .setPositiveButton(activity.getString(android.R.string.ok)) { dialog, _ -> dialog.dismiss() }
-                    .setTitle(title)
-                    .setMessage(pair.second.first)
-                if (pair.second.second == Logger.Companion.Type.CRASH.name)
-                    builder.setNeutralButton(activity.getString(R.string.share_crash_url)) { dialog, _ ->
-                        DogbinUtils.upload(pair.second.first, object : DogbinUtils.UploadResultCallback {
-                            override fun onSuccess(url: String) {
-                                dialog.dismiss()
-                                val sendIntent: Intent = Intent().apply {
-                                    action = Intent.ACTION_SEND
-                                    putExtra(Intent.EXTRA_TEXT, url)
-                                    type = "text/plain"
-                                }
-                                activity.startActivity(
-                                    Intent.createChooser(
-                                        sendIntent,
-                                        activity.getString(R.string.send_to)
-                                    )
-                                )
-                            }
-
-                            override fun onFail(message: String, e: Exception) {
-                                dialog.dismiss()
-                                Logger.log(Logger.Companion.Type.ERROR, "Dogbin Upload", Log.getStackTraceString(e))
-                            }
-                        })
-                    }
-                val dialog = builder.create()
-                //dialog.show()
-                //dialog.window?.decorView?.layoutParams?.width = (width * 0.85F).toInt()
-                //dialog.window
-                //   ?.setBackgroundDrawable(ColorDrawable(Ui.getAttrColor(activity, android.R.attr.windowBackground)))
             }
         }
 
@@ -257,12 +222,12 @@ class Logs() : Fragment() {
     }
 
     class BottomSheet(
-        private val title: String,
-        private val message: String,
-        private val roundedCorners: Boolean
+            private val title: String,
+            private val message: String,
+            private val roundedCorners: Boolean
     ) :
-        BottomSheetDialogFragment() {
-        @SuppressLint("SetTextI18n")
+            BottomSheetDialogFragment() {
+        @SuppressLint("SetTextI18n", "ResourceType")
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
             return LinearLayout(context).apply {
                 val backgroundColor = getAttrColor(context, android.R.attr.windowBackground)
@@ -281,14 +246,21 @@ class Logs() : Fragment() {
                 })
                 addView(NestedScrollView(context).apply {
                     orientation = VERTICAL
+                    val scroll = this
                     addView(LinearLayout(context).apply {
                         orientation = VERTICAL
+                        addView(Button(context).apply {
+                            text = "Down"
+                            setOnClickListener {
+                                scroll.fullScroll(FOCUS_DOWN)
+                            }
+                        })
                         message.split("\n").forEachIndexed { index, s ->
                             addView(TextView(context).apply {
                                 text = s
                                 setPadding(5.dp(context))
                                 val typedArrayDark = activity!!.obtainStyledAttributes(
-                                    intArrayOf(android.R.attr.selectableItemBackground)
+                                        intArrayOf(android.R.attr.selectableItemBackground)
                                 )
                                 background = typedArrayDark.getDrawable(0)
                                 typedArrayDark.recycle()
@@ -297,51 +269,51 @@ class Logs() : Fragment() {
                                 setTextSize(COMPLEX_UNIT_SP, 16F)
                                 setOnClickListener {
                                     LineBottomSheet("${getString(R.string.copy_line)} ${index + 1}", s, index)
-                                        .show(fragmentManager, "")
+                                            .show(fragmentManager, "")
                                 }
                             })
                         }
-                    })
-                })
-                addView(LinearLayout(context).apply {
-                    // TODO: fix buttons
-                    orientation = HORIZONTAL
-                    addView(Button(context).apply {
-                        text = getString(R.string.share_crash_url)
-                        val typedArrayDark = activity!!.obtainStyledAttributes(
-                            intArrayOf(android.R.attr.selectableItemBackground)
-                        )
-                        background = typedArrayDark.getDrawable(0)
-                        typedArrayDark.recycle()
-                        setOnClickListener {
-                            DogbinUtils.upload(message, object : DogbinUtils.UploadResultCallback {
-                                override fun onSuccess(url: String) {
-                                    this@BottomSheet.dismiss()
-                                    val sendIntent: Intent = Intent().apply {
-                                        action = Intent.ACTION_SEND
-                                        putExtra(Intent.EXTRA_TEXT, url)
-                                        type = "text/plain"
-                                    }
-                                    startActivity(Intent.createChooser(sendIntent, getString(R.string.send_to)))
-                                }
+                        addView(LinearLayout(context).apply {
+                            orientation = HORIZONTAL
+                            setHorizontalGravity(END)
+                            addView(Button(context).apply {
+                                text = getString(R.string.share_crash_url)
+                                val typedArrayDark = activity!!.obtainStyledAttributes(
+                                        intArrayOf(android.R.attr.selectableItemBackground)
+                                )
+                                background = typedArrayDark.getDrawable(0)
+                                typedArrayDark.recycle()
+                                setOnClickListener {
+                                    DogbinUtils.upload(message, object : DogbinUtils.UploadResultCallback {
+                                        override fun onSuccess(url: String) {
+                                            this@BottomSheet.dismiss()
+                                            val sendIntent: Intent = Intent().apply {
+                                                action = Intent.ACTION_SEND
+                                                putExtra(Intent.EXTRA_TEXT, url)
+                                                type = "text/plain"
+                                            }
+                                            startActivity(Intent.createChooser(sendIntent, getString(R.string.send_to)))
+                                        }
 
-                                override fun onFail(message: String, e: Exception) {
-                                    dialog.dismiss()
-                                    Logger.log(Logger.Companion.Type.ERROR, "Dogbin Upload", Log.getStackTraceString(e))
+                                        override fun onFail(message: String, e: Exception) {
+                                            dialog.dismiss()
+                                            Logger.log(Logger.Companion.Type.ERROR, "Dogbin Upload", Log.getStackTraceString(e))
+                                        }
+                                    })
                                 }
                             })
-                        }
-                    })
-                    addView(Button(context).apply {
-                        text = getString(android.R.string.ok)
-                        val typedArrayDark = activity!!.obtainStyledAttributes(
-                            intArrayOf(android.R.attr.selectableItemBackground)
-                        )
-                        background = typedArrayDark.getDrawable(0)
-                        typedArrayDark.recycle()
-                        setOnClickListener {
-                            this@BottomSheet.dismiss()
-                        }
+                            addView(Button(context).apply {
+                                text = getString(android.R.string.ok)
+                                val typedArrayDark = activity!!.obtainStyledAttributes(
+                                        intArrayOf(android.R.attr.selectableItemBackground)
+                                )
+                                background = typedArrayDark.getDrawable(0)
+                                typedArrayDark.recycle()
+                                setOnClickListener {
+                                    this@BottomSheet.dismiss()
+                                }
+                            })
+                        })
                     })
                 })
             }
@@ -353,11 +325,11 @@ class Logs() : Fragment() {
         }
 
         class LineBottomSheet(private val title: String, private val message: String, private val index: Int) :
-            BottomSheetDialogFragment() {
+                BottomSheetDialogFragment() {
             override fun onCreateView(
-                inflater: LayoutInflater,
-                container: ViewGroup?,
-                savedInstanceState: Bundle?
+                    inflater: LayoutInflater,
+                    container: ViewGroup?,
+                    savedInstanceState: Bundle?
             ): View? {
                 return LinearLayout(context).apply {
                     orientation = VERTICAL
@@ -371,7 +343,7 @@ class Logs() : Fragment() {
                         addView(Button(context).apply {
                             text = title
                             val typedArrayDark = activity!!.obtainStyledAttributes(
-                                intArrayOf(android.R.attr.selectableItemBackground)
+                                    intArrayOf(android.R.attr.selectableItemBackground)
                             )
                             background = typedArrayDark.getDrawable(0)
                             typedArrayDark.recycle()
@@ -380,7 +352,8 @@ class Logs() : Fragment() {
                                 val clip = ClipData.newPlainText(title, message)
                                 clipboard.primaryClip = clip
                                 Toast.makeText(context, "${getString(R.string.copied)} ${index + 1}", Toast.LENGTH_LONG)
-                                    .show()
+                                        .show()
+                                this@LineBottomSheet.dismiss()
                             }
                         })
                     })
