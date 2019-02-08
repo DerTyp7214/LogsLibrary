@@ -102,6 +102,8 @@ class Logs() : Fragment() {
         rv.layoutManager = layoutManager
         rv.addItemDecoration(dividerItemDecoration)
 
+        v.findViewById<ViewGroup>(R.id.layout).setBackgroundColor(Ui.getAttrColor(activity!!, R.attr.colorPrimary))
+
         val list = ArrayList<String>(stringArrayOf(info, debug, error, crash, assert, warn, verbose))
         val dataAdapter = ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, list)
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -227,6 +229,8 @@ class Logs() : Fragment() {
             private val roundedCorners: Boolean
     ) :
             BottomSheetDialogFragment() {
+        private lateinit var scrollView: NestedScrollView
+        private lateinit var downButton: Button
         @SuppressLint("SetTextI18n", "ResourceType")
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
             return LinearLayout(context).apply {
@@ -246,13 +250,19 @@ class Logs() : Fragment() {
                 })
                 addView(NestedScrollView(context).apply {
                     orientation = VERTICAL
-                    val scroll = this
+                    scrollView = this
                     addView(LinearLayout(context).apply {
                         orientation = VERTICAL
                         addView(Button(context).apply {
-                            text = "Down"
+                            text = getString(R.string.down)
+                            val typedArrayDark = activity!!.obtainStyledAttributes(
+                                    intArrayOf(android.R.attr.selectableItemBackground)
+                            )
+                            background = typedArrayDark.getDrawable(0)
+                            typedArrayDark.recycle()
+                            downButton = this
                             setOnClickListener {
-                                scroll.fullScroll(FOCUS_DOWN)
+                                scrollView.fullScroll(FOCUS_DOWN)
                             }
                         })
                         message.split("\n").forEachIndexed { index, s ->
@@ -266,7 +276,7 @@ class Logs() : Fragment() {
                                 typedArrayDark.recycle()
                                 isFocusable = true
                                 isClickable = true
-                                setTextSize(COMPLEX_UNIT_SP, 16F)
+                                setTextSize(COMPLEX_UNIT_SP, 14F)
                                 setOnClickListener {
                                     LineBottomSheet("${getString(R.string.copy_line)} ${index + 1}", s, index)
                                             .show(fragmentManager, "")

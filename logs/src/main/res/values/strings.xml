@@ -8,4 +8,5 @@
     <string name="no_entries">No entries</string>
     <string name="copy_line">Copy line</string>
     <string name="copied">Copied line</string>
+    <string name="down">Down</string>
 </resources>
