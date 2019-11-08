@@ -279,7 +279,7 @@ class Logs() : Fragment() {
                                 setTextSize(COMPLEX_UNIT_SP, 14F)
                                 setOnClickListener {
                                     LineBottomSheet("${getString(R.string.copy_line)} ${index + 1}", s, index)
-                                            .show(fragmentManager, "")
+                                            .show(fragmentManager!!, "")
                                 }
                             })
                         }
@@ -306,7 +306,7 @@ class Logs() : Fragment() {
                                         }
 
                                         override fun onFail(message: String, e: Exception) {
-                                            dialog.dismiss()
+                                            dialog?.dismiss()
                                             Logger.log(Logger.Companion.Type.ERROR, "Dogbin Upload", Log.getStackTraceString(e))
                                         }
                                     })
