@@ -32,7 +32,7 @@ class CrashReportDialog : AppCompatActivity() {
             .setMessage(message)
             .setPositiveButton(android.R.string.ok) { dialog, _ ->
                 dialog.dismiss()
-                finish()
+                finishAndRemoveTask()
             }
             .setNeutralButton(getString(R.string.share_crash_url)) { dialog, _ ->
                 DogbinUtils.upload(log ?: "", object : DogbinUtils.UploadResultCallback {
@@ -43,14 +43,12 @@ class CrashReportDialog : AppCompatActivity() {
                             type = "text/plain"
                         }
                         startActivity(Intent.createChooser(sendIntent, getString(R.string.send_to)))
-                        dialog.dismiss()
-                        finish()
                     }
 
                     override fun onFail(message: String, e: Exception) {
                         dialog.dismiss()
                         Logger.log(Logger.Companion.Type.ERROR, "Dogbin Upload", Log.getStackTraceString(e))
-                        finish()
+                        finishAndRemoveTask()
                     }
                 })
             }
