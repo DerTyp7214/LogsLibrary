@@ -7,19 +7,22 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.edit
 import com.dertyp7214.logs.R
 import com.dertyp7214.logs.fragments.Logs
 import com.dertyp7214.logs.helpers.Ui
 import com.dertyp7214.logs.helpers.Ui.Companion.isColorDark
-import kotlinx.android.synthetic.main.activity_logs.*
 
 class Logs : AppCompatActivity() {
+
+    private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.AppTheme_NoActionBar)
         setContentView(R.layout.activity_logs)
+        toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.dertyp7214.logs.helpers.Logger
 import com.dertyp7214.logs.screens.Logs
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,18 +25,20 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("LOOOOOGS", Logger.logsToMessage(this))
 
-        toolbar2.menu.add(0, R.id.menu_open, 0, "Open").setOnMenuItemClickListener {
-            startActivity(Intent(this, Logs::class.java))
-            true
-        }
-        toolbar2.menu.add(0, R.id.menu_crash, 0, "Crash").setOnMenuItemClickListener {
-            val i = 55 / 0
-            true
-        }
-        toolbar2.menu.add(0, R.id.menu_clear, 0, "Clear").setOnMenuItemClickListener {
-            Logger.clear()
-            recreate()
-            true
+        findViewById<Toolbar>(R.id.toolbar2).apply {
+            menu.add(0, R.id.menu_open, 0, "Open").setOnMenuItemClickListener {
+                startActivity(Intent(this@MainActivity, Logs::class.java))
+                true
+            }
+            menu.add(0, R.id.menu_crash, 0, "Crash").setOnMenuItemClickListener {
+                val i = 55 / 0
+                true
+            }
+            menu.add(0, R.id.menu_clear, 0, "Clear").setOnMenuItemClickListener {
+                Logger.clear()
+                recreate()
+                true
+            }
         }
     }
 }
