@@ -2,7 +2,6 @@ package com.dertyp7214.logs.preferences
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.preference.PreferenceManager
 import android.util.AttributeSet
 import com.dertyp7214.logs.helpers.Logger
 import com.dertyp7214.preferencesplus.preferences.BottomSheetPreference
@@ -33,7 +32,10 @@ class LogMode : BottomSheetPreference {
 
     override fun init(attrs: AttributeSet?) {
         super.init(attrs)
-        val preferences = PreferenceManager.getDefaultSharedPreferences(Logger.context)
+        val preferences = Logger.context.getSharedPreferences(
+            "${Logger.context.packageName}_preferences",
+            Context.MODE_PRIVATE
+        )
         setDefaultValue("VERBOSE")
         entries = arrayOf("VERBOSE", "ASSERT", "INFO", "WARN", "DEBUG", "ERROR", "CRASH")
         entryValues = arrayOf("VERBOSE", "ASSERT", "INFO", "WARN", "DEBUG", "ERROR", "CRASH")

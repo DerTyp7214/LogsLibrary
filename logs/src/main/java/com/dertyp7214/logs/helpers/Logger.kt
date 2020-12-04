@@ -3,15 +3,16 @@ package com.dertyp7214.logs.helpers
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.graphics.Color
-import android.preference.PreferenceManager
-import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.core.content.edit
 import com.dertyp7214.logs.R
+import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.system.exitProcess
 
 class Logger {
     companion object {
@@ -35,7 +36,12 @@ class Logger {
 
         fun log(type: Type, tag: String, body: Any?, c: Context = context) {
             val mode =
-                parseLogMode(PreferenceManager.getDefaultSharedPreferences(context).getString("logMode", "VERBOSE")!!)
+                parseLogMode(
+                    context.getSharedPreferences(
+                        "${context.packageName}_preferences",
+                        MODE_PRIVATE
+                    ).getString("logMode", "VERBOSE")!!
+                )
             when {
                 type == Type.CRASH && mode >= 1 -> Log.wtf(tag, body.toString())
                 type == Type.ERROR && mode >= 2 -> Log.e(tag, body.toString())
@@ -46,7 +52,7 @@ class Logger {
                 type == Type.VERBOSE && mode >= 7 -> Log.v(tag, body.toString())
             }
             try {
-                val sharedPreferences = c.getSharedPreferences("logs", Context.MODE_PRIVATE)
+                val sharedPreferences = c.getSharedPreferences("logs", MODE_PRIVATE)
                 if ((type == Type.CRASH && mode >= 1)
                     || (type == Type.ERROR && mode >= 2)
                     || (type == Type.DEBUG && mode >= 3)
@@ -58,7 +64,10 @@ class Logger {
                     sharedPreferences.edit {
                         putString(
                             System.currentTimeMillis().toString(),
-                            JSONObject("{\"type\": \"${type.name}\", \"body\": \"${TextUtils.htmlEncode(body.toString())}\"}").toString()
+                            JSONObject().apply {
+                                put("type", type.name)
+                                put("body", body.toString())
+                            }.toString()
                         )
                     }
                 }
@@ -67,8 +76,29 @@ class Logger {
             }
         }
 
+        fun getLogs(c: Context = context): Map<Long, JSONObject> {
+            val map = HashMap<Long, JSONObject>()
+            val sharedPreferences = c.getSharedPreferences("logs", MODE_PRIVATE)
+            sharedPreferences.all.forEach { (k, v) ->
+                map[k.toLong()] = try {
+                    JSONObject(v.toString())
+                } catch (e: java.lang.Exception) {
+                    JSONObject()
+                }
+            }
+            return map.toSortedMap { o1, o2 -> (o1 - o2).toInt() }
+        }
+
+        fun logsToMessage(c: Context = context): String {
+            return JSONArray().apply {
+                getLogs(c).forEach {
+                    put(it.value.apply { put("time", it.key) })
+                }
+            }.toString(2)
+        }
+
         fun clear() {
-            context.getSharedPreferences("logs", Context.MODE_PRIVATE).edit {
+            context.getSharedPreferences("logs", MODE_PRIVATE).edit {
                 clear()
             }
         }
@@ -80,7 +110,11 @@ class Logger {
             this.accentColor = context.resources.getColor(R.color.colorAccent)
         }
 
-        fun init(application: Application, @ColorInt primaryColor: Int, @ColorInt accentColor: Int) {
+        fun init(
+            application: Application,
+            @ColorInt primaryColor: Int,
+            @ColorInt accentColor: Int
+        ) {
             init(application)
             this.primaryColor = primaryColor
             this.accentColor = accentColor
@@ -90,11 +124,11 @@ class Logger {
             Thread.setDefaultUncaughtExceptionHandler { t, e ->
                 val dialogIntent = Intent(applicationContext, CrashReportDialog::class.java)
                 dialogIntent.putExtra("CRASH_LOG", Log.getStackTraceString(e ?: Error()))
-                dialogIntent.putExtra("CRASH_MESSAGE", e?.message)
+                dialogIntent.putExtra("CRASH_MESSAGE", e.message)
                 dialogIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 applicationContext.startActivity(dialogIntent)
                 android.os.Process.killProcess(android.os.Process.myPid())
-                System.exit(10)
+                exitProcess(10)
             }
         }
 

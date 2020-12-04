@@ -13,9 +13,8 @@ import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
 object DogbinUtils {
-    private val TAG = "DogbinUtils"
     private const val BASE_URL = "https://del.dog"
-    private val API_URL = String.format("%s/documents", BASE_URL)
+    private const val API_URL = "$BASE_URL/documents"
     private var handler: Handler? = null
 
     fun upload(content: String, callback: UploadResultCallback) {
@@ -43,7 +42,7 @@ object DogbinUtils {
                         }
                         reader.endObject()
                     }
-                    if (!key.isEmpty()) {
+                    if (key.isNotEmpty()) {
                         callback.onSuccess(getUrl(key))
                     } else {
                         val msg = "Failed to upload to dogbin: No key retrieved"
@@ -59,7 +58,7 @@ object DogbinUtils {
     }
 
     private fun getUrl(key: String): String {
-        return String.format("%s/%s", BASE_URL, key)
+        return "$BASE_URL/$key"
     }
 
     private fun getHandler(): Handler {
@@ -78,7 +77,7 @@ object DogbinUtils {
         fun onFail(message: String, e: Exception)
     }
 
-    private class DogbinException internal constructor(message: String) : Exception(message) {
+    private class DogbinException(message: String) : Exception(message) {
         companion object {
             private const val serialVersionUID = 666L
         }
