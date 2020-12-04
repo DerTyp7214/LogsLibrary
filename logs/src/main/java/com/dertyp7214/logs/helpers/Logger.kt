@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 import com.dertyp7214.logs.R
 import org.json.JSONArray
 import org.json.JSONObject
@@ -53,10 +54,8 @@ class Logger {
         fun log(type: Type, tag: String, body: Any?, c: Context = context) {
             val mode =
                 parseLogMode(
-                    context.getSharedPreferences(
-                        "${context.packageName}_preferences",
-                        MODE_PRIVATE
-                    ).getString("logMode", "VERBOSE")!!
+                    PreferenceManager.getDefaultSharedPreferences(context)
+                        .getString("logMode", "VERBOSE")!!
                 )
             when {
                 type == Type.CRASH && mode >= 1 -> Log.wtf(tag, body.toString())

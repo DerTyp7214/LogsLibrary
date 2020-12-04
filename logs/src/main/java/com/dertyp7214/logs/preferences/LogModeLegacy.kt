@@ -2,11 +2,10 @@ package com.dertyp7214.logs.preferences
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.preference.PreferenceManager
 import android.util.AttributeSet
 import androidx.preference.DropDownPreference
+import androidx.preference.PreferenceManager
 import com.dertyp7214.logs.helpers.Logger
-import com.dertyp7214.preferencesplus.preferences.BottomSheetPreference
 
 class LogModeLegacy : DropDownPreference {
     @SuppressLint("NewApi")
