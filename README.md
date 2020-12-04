@@ -1,4 +1,4 @@
-[![](https://jitpack.io/v/DerTyp7214/LogsLibrary.svg)](https://jitpack.io/#DerTyp7214/LogsLibrary)
+[![](https://jitpack.io/v/de.dertyp7214/LogsLibrary.svg)](https://jitpack.io/#de.dertyp7214/LogsLibrary)
 
 ## To import the lib
 

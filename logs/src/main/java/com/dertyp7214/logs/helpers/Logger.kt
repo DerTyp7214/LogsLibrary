@@ -34,6 +34,22 @@ class Logger {
             }
         }
 
+        fun getAll(): Map<Type, JSONObject> {
+            return PreferenceManager.getDefaultSharedPreferences(context).all.map {
+                val json = JSONObject(it.value as String)
+                val type = when (json.getString("type")) {
+                    Type.CRASH.name -> Type.CRASH
+                    Type.DEBUG.name -> Type.DEBUG
+                    Type.ERROR.name -> Type.ERROR
+                    Type.INFO.name -> Type.INFO
+                    Type.ASSERT.name -> Type.ASSERT
+                    Type.WARN.name -> Type.WARN
+                    else -> Type.VERBOSE
+                }
+                Pair(type, json)
+            }.toMap()
+        }
+
         fun log(type: Type, tag: String, body: Any?, c: Context = context) {
             val mode =
                 parseLogMode(

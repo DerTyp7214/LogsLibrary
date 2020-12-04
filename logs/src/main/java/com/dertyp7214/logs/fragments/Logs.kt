@@ -17,8 +17,11 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue.COMPLEX_UNIT_SP
+import android.view.Gravity
+import android.view.Gravity.END
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.FOCUS_DOWN
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.LinearLayout.HORIZONTAL
@@ -90,6 +93,8 @@ class Logs : Fragment() {
         )
         rv.layoutManager = layoutManager
         rv.addItemDecoration(dividerItemDecoration)
+
+        v.findViewById<ViewGroup>(R.id.layout).setBackgroundColor(Ui.getAttrColor(requireActivity(), R.attr.colorPrimary))
 
         val list =
             ArrayList<String>(stringArrayOf(info, debug, error, crash, assert, warn, verbose))
@@ -220,6 +225,8 @@ class Logs : Fragment() {
         private val roundedCorners: Boolean
     ) :
         BottomSheetDialogFragment() {
+        private lateinit var scrollView: NestedScrollView
+        private lateinit var downButton: Button
         @SuppressLint("SetTextI18n")
         override fun onCreateView(
             inflater: LayoutInflater,
@@ -243,8 +250,21 @@ class Logs : Fragment() {
                 })
                 addView(NestedScrollView(context).apply {
                     orientation = VERTICAL
+                    scrollView = this
                     addView(LinearLayout(context).apply {
                         orientation = VERTICAL
+                        addView(Button(context).apply {
+                            text = getString(R.string.down)
+                            val typedArrayDark = requireActivity().obtainStyledAttributes(
+                                    intArrayOf(android.R.attr.selectableItemBackground)
+                            )
+                            background = typedArrayDark.getDrawable(0)
+                            typedArrayDark.recycle()
+                            downButton = this
+                            setOnClickListener {
+                                scrollView.fullScroll(FOCUS_DOWN)
+                            }
+                        })
                         message.split("\n").forEachIndexed { index, s ->
                             addView(TextView(context).apply {
                                 text = s
@@ -256,7 +276,7 @@ class Logs : Fragment() {
                                 typedArrayDark.recycle()
                                 isFocusable = true
                                 isClickable = true
-                                setTextSize(COMPLEX_UNIT_SP, 16F)
+                                setTextSize(COMPLEX_UNIT_SP, 14F)
                                 setOnClickListener {
                                     LineBottomSheet(
                                         "${getString(R.string.copy_line)} ${index + 1}",
@@ -269,8 +289,8 @@ class Logs : Fragment() {
                     })
                 })
                 addView(LinearLayout(context).apply {
-                    // TODO: fix buttons
                     orientation = HORIZONTAL
+                    setHorizontalGravity(Gravity.END)
                     addView(Button(context).apply {
                         text = getString(R.string.share_crash_url)
                         val typedArrayDark = requireActivity().obtainStyledAttributes(
@@ -362,8 +382,8 @@ class Logs : Fragment() {
                                     context,
                                     "${getString(R.string.copied)} ${index + 1}",
                                     Toast.LENGTH_LONG
-                                )
-                                    .show()
+                                ).show()
+                                this@LineBottomSheet.dismiss()
                             }
                         })
                     })
