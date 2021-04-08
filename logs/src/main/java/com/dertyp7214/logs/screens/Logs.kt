@@ -25,20 +25,19 @@ class Logs : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val windowBackground = Ui.getAttrColor(this, android.R.attr.windowBackground)
-            toolbar.elevation = 0F
-            window.statusBarColor = com.dertyp7214.logs.helpers.Logger.primaryColor
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                window.navigationBarColor = windowBackground
-                if (!isColorDark(windowBackground) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-                    window.navigationBarDividerColor = Color.LTGRAY
-            }
+        val windowBackground = Ui.getAttrColor(this, android.R.attr.windowBackground)
+        toolbar.elevation = 0F
+        window.statusBarColor = com.dertyp7214.logs.helpers.Logger.primaryColor
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            window.navigationBarColor = windowBackground
+            if (!isColorDark(windowBackground) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                window.navigationBarDividerColor = Color.LTGRAY
         }
 
         val itemDelete =
             toolbar.menu.add(0, R.id.menu_delete, Menu.NONE, R.string.menu_action_delete)
-        itemDelete.setIcon(R.drawable.ic_action_delete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        itemDelete.setIcon(R.drawable.ic_action_delete)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         itemDelete.setOnMenuItemClickListener {
             getSharedPreferences("logs", Context.MODE_PRIVATE).edit {
                 clear()

@@ -23,6 +23,8 @@ class Logger {
         var primaryColor = Color.GRAY
         var accentColor = Color.GRAY
 
+        var extraData: (() -> String)? = null
+
         private fun parseLogMode(mode: String): Int {
             return when (mode) {
                 "CRASH" -> 1
@@ -136,10 +138,11 @@ class Logger {
         }
 
         private fun setUpCrashHelper(applicationContext: Context) {
-            Thread.setDefaultUncaughtExceptionHandler { t, e ->
+            Thread.setDefaultUncaughtExceptionHandler { _, e ->
                 val dialogIntent = Intent(applicationContext, CrashReportDialog::class.java)
                 dialogIntent.putExtra("CRASH_LOG", Log.getStackTraceString(e ?: Error()))
                 dialogIntent.putExtra("CRASH_MESSAGE", e.message)
+                dialogIntent.putExtra("CRASH_EXTRA", extraData?.invoke())
                 dialogIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 applicationContext.startActivity(dialogIntent)
                 android.os.Process.killProcess(android.os.Process.myPid())
