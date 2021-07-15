@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.dertyp7214.logs">
+        package="com.dertyp7214.logs">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application>
         <activity
+                android:exported="true"
                 android:name=".screens.Logs"
-                android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+                android:theme="@style/AppTheme.NoActionBar" />
     </application>
 </manifest>

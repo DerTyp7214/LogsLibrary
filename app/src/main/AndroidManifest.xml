@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.dertyp7214.logsexampleapp">
+        xmlns:tools="http://schemas.android.com/tools"
+        package="com.dertyp7214.logsexampleapp">
 
     <application
             android:allowBackup="true"
@@ -11,13 +12,17 @@
             android:name=".App"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity">
+        <activity
+                android:name=".MainActivity"
+                android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.dertyp7214.logs.helpers.CrashReportDialog"/>
+        <activity
+                android:name="com.dertyp7214.logs.helpers.CrashReportDialog"
+                android:exported="false" />
     </application>
 </manifest>

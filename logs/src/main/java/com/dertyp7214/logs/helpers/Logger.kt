@@ -24,6 +24,7 @@ class Logger {
         var accentColor = Color.GRAY
 
         var extraData: (() -> String)? = null
+        var customBin: String? = null
 
         private fun parseLogMode(mode: String): Int {
             return when (mode) {
