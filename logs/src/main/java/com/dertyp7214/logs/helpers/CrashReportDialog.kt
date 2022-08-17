@@ -5,16 +5,17 @@
 
 package com.dertyp7214.logs.helpers
 
-import android.app.AlertDialog
-import android.content.DialogInterface.BUTTON_NEUTRAL
-import android.content.DialogInterface.BUTTON_POSITIVE
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.dertyp7214.logs.R
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class CrashReportDialog : AppCompatActivity() {
 
@@ -52,9 +53,10 @@ class CrashReportDialog : AppCompatActivity() {
             if (extraData != null) append(extraData)
         }.append("\n\n").append(log).toString()
 
-        val dialog = AlertDialog.Builder(this)
+        val dialog = MaterialAlertDialogBuilder(this)
             .setTitle(R.string.app_crash)
             .setMessage(message)
+            .setCancelable(false)
             .setPositiveButton(android.R.string.ok) { dialog, _ ->
                 dialog.dismiss()
                 finishAndRemoveTask()
@@ -82,10 +84,9 @@ class CrashReportDialog : AppCompatActivity() {
                 })
             }
             .create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.findViewById<View>(android.R.id.content)?.background =
+            ContextCompat.getDrawable(this, R.drawable.dialog_background)
         dialog.show()
-        dialog.getButton(BUTTON_POSITIVE).setBackgroundColor(Color.TRANSPARENT)
-        dialog.getButton(BUTTON_NEUTRAL).setBackgroundColor(Color.TRANSPARENT)
-        dialog.getButton(BUTTON_POSITIVE).setTextColor(Logger.accentColor)
-        dialog.getButton(BUTTON_NEUTRAL).setTextColor(Logger.accentColor)
     }
 }

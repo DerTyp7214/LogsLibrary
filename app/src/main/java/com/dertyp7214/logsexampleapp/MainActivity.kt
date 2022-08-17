@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("LOOOOOGS", Logger.logsToMessage(this))
 
+        Logger.log(Logger.Companion.Type.INFO, "MAIN", "Start MainActivity")
+
         findViewById<Toolbar>(R.id.toolbar2).apply {
             menu.add(0, R.id.menu_open, 0, "Open").setOnMenuItemClickListener {
                 startActivity(Intent(this@MainActivity, Logs::class.java))

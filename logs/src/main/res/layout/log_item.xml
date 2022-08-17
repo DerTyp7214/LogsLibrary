@@ -1,48 +1,62 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019.
   ~ Created by Josua Lengwenath
   -->
 
-<androidx.cardview.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="0dp"
-        android:layout_margin="0dp">
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="0dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
 
     <LinearLayout
-            android:id="@+id/layout"
-            android:background="?android:attr/selectableItemBackground"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp">
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="vertical"
+        android:padding="5dp">
+
         <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:gravity="top">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:orientation="horizontal">
+
             <TextView
-                    android:text="TextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/txt_time"
-                    android:textSize="18sp"
-                    android:maxLines="1" android:layout_weight="1" android:layout_marginEnd="2dp"/>
-            <TextView
-                    android:text="Type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/txt_type" android:textSize="10sp"
-                    android:gravity="top"/>
-        </LinearLayout>
-        <TextView
-                android:text="TextView"
-                android:layout_width="match_parent"
+                android:id="@+id/txt_time"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/txt_body"
-                android:textSize="13sp"
-                android:layout_marginTop="2dp"
-                android:maxLines="1"/>
+                android:layout_marginEnd="2dp"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:textSize="18sp"
+                tools:text="TextView" />
+
+            <TextView
+                android:id="@+id/txt_type"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:textSize="10sp"
+                tools:ignore="SmallSp"
+                tools:text="Type" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_body"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:maxLines="1"
+            android:textSize="13sp"
+            tools:text="TextView" />
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

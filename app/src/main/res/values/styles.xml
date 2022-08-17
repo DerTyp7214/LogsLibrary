@@ -1,11 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorBackgroundFloating" tools:ignore="NewApi">
+            @android:color/background_light
+        </item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSurface">@android:color/background_light</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
     </style>
 </resources>

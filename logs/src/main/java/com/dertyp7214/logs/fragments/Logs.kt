@@ -17,15 +17,14 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue.COMPLEX_UNIT_SP
-import android.view.Gravity
-import android.view.Gravity.END
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.FOCUS_DOWN
 import android.view.ViewGroup
-import android.widget.*
-import android.widget.LinearLayout.HORIZONTAL
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.LinearLayout.VERTICAL
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.setPadding
 import androidx.core.widget.NestedScrollView
@@ -39,11 +38,12 @@ import com.dertyp7214.logs.helpers.Logger
 import com.dertyp7214.logs.helpers.Ui
 import com.dertyp7214.preferencesplus.core.dp
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
+@Suppress("DEPRECATION")
 class Logs : Fragment() {
 
     private val info = "Info"
@@ -54,12 +54,7 @@ class Logs : Fragment() {
     private val warn = "Warn"
     private val verbose = "Verbose"
 
-    private fun stringArrayOf(vararg elements: String): List<String> {
-        val list = ArrayList<String>()
-        elements.forEach { list.add(it) }
-        return list
-    }
-
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -94,62 +89,46 @@ class Logs : Fragment() {
         rv.layoutManager = layoutManager
         rv.addItemDecoration(dividerItemDecoration)
 
-        v.findViewById<ViewGroup>(R.id.layout).setBackgroundColor(Ui.getAttrColor(requireActivity(), R.attr.colorPrimary))
-
-        val list =
-            ArrayList<String>(stringArrayOf(info, debug, error, crash, assert, warn, verbose))
-        val dataAdapter =
-            ArrayAdapter(requireActivity(), android.R.layout.simple_spinner_item, list)
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        val spinner: Spinner = v.findViewById(R.id.spinner)
-        spinner.adapter = dataAdapter
-        spinner.setSelection(list.indexOf(verbose))
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                when (list[position]) {
-                    info -> {
-                        logList.clear()
-                        logList.addAll(filterByType(logs, Logger.Companion.Type.INFO))
-                        adapter.notifyDataSetChanged()
-                    }
-                    debug -> {
-                        logList.clear()
-                        logList.addAll(filterByType(logs, Logger.Companion.Type.DEBUG))
-                        adapter.notifyDataSetChanged()
-                    }
-                    error -> {
-                        logList.clear()
-                        logList.addAll(filterByType(logs, Logger.Companion.Type.ERROR))
-                        adapter.notifyDataSetChanged()
-                    }
-                    crash -> {
-                        logList.clear()
-                        logList.addAll(filterByType(logs, Logger.Companion.Type.CRASH))
-                        adapter.notifyDataSetChanged()
-                    }
-                    assert -> {
-                        logList.clear()
-                        logList.addAll(filterByType(logs, Logger.Companion.Type.ASSERT))
-                        adapter.notifyDataSetChanged()
-                    }
-                    warn -> {
-                        logList.clear()
-                        logList.addAll(filterByType(logs, Logger.Companion.Type.WARN))
-                        adapter.notifyDataSetChanged()
-                    }
-                    verbose -> {
-                        logList.clear()
-                        logList.addAll(logs)
-                        adapter.notifyDataSetChanged()
-                    }
+        val list = arrayOf(info, debug, error, crash, assert, warn, verbose)
+        val completeTextView: MaterialAutoCompleteTextView = v.findViewById(R.id.completeTextView)
+        completeTextView.setSimpleItems(list)
+        completeTextView.setText(verbose, false)
+        completeTextView.setOnItemClickListener { _, _, position, _ ->
+            when (list[position]) {
+                info -> {
+                    logList.clear()
+                    logList.addAll(filterByType(logs, Logger.Companion.Type.INFO))
+                    adapter.notifyDataSetChanged()
+                }
+                debug -> {
+                    logList.clear()
+                    logList.addAll(filterByType(logs, Logger.Companion.Type.DEBUG))
+                    adapter.notifyDataSetChanged()
+                }
+                error -> {
+                    logList.clear()
+                    logList.addAll(filterByType(logs, Logger.Companion.Type.ERROR))
+                    adapter.notifyDataSetChanged()
+                }
+                crash -> {
+                    logList.clear()
+                    logList.addAll(filterByType(logs, Logger.Companion.Type.CRASH))
+                    adapter.notifyDataSetChanged()
+                }
+                assert -> {
+                    logList.clear()
+                    logList.addAll(filterByType(logs, Logger.Companion.Type.ASSERT))
+                    adapter.notifyDataSetChanged()
+                }
+                warn -> {
+                    logList.clear()
+                    logList.addAll(filterByType(logs, Logger.Companion.Type.WARN))
+                    adapter.notifyDataSetChanged()
+                }
+                verbose -> {
+                    logList.clear()
+                    logList.addAll(logs)
+                    adapter.notifyDataSetChanged()
                 }
             }
         }
@@ -226,7 +205,7 @@ class Logs : Fragment() {
     ) :
         BottomSheetDialogFragment() {
         private lateinit var scrollView: NestedScrollView
-        private lateinit var downButton: Button
+
         @SuppressLint("SetTextI18n")
         override fun onCreateView(
             inflater: LayoutInflater,
@@ -254,15 +233,40 @@ class Logs : Fragment() {
                     addView(LinearLayout(context).apply {
                         orientation = VERTICAL
                         addView(Button(context).apply {
-                            text = getString(R.string.down)
+                            text = getString(R.string.share_crash_url)
                             val typedArrayDark = requireActivity().obtainStyledAttributes(
-                                    intArrayOf(android.R.attr.selectableItemBackground)
+                                intArrayOf(android.R.attr.selectableItemBackground)
                             )
                             background = typedArrayDark.getDrawable(0)
                             typedArrayDark.recycle()
-                            downButton = this
                             setOnClickListener {
-                                scrollView.fullScroll(FOCUS_DOWN)
+                                DogbinUtils.upload(
+                                    message,
+                                    object : DogbinUtils.UploadResultCallback {
+                                        override fun onSuccess(url: String) {
+                                            this@BottomSheet.dismiss()
+                                            val sendIntent: Intent = Intent().apply {
+                                                action = Intent.ACTION_SEND
+                                                putExtra(Intent.EXTRA_TEXT, url)
+                                                type = "text/plain"
+                                            }
+                                            startActivity(
+                                                Intent.createChooser(
+                                                    sendIntent,
+                                                    getString(R.string.send_to)
+                                                )
+                                            )
+                                        }
+
+                                        override fun onFail(message: String, e: Exception) {
+                                            dialog?.dismiss()
+                                            Logger.log(
+                                                Logger.Companion.Type.ERROR,
+                                                "Dogbin Upload",
+                                                Log.getStackTraceString(e)
+                                            )
+                                        }
+                                    })
                             }
                         })
                         message.split("\n").forEachIndexed { index, s ->
@@ -288,62 +292,7 @@ class Logs : Fragment() {
                         }
                     })
                 })
-                addView(LinearLayout(context).apply {
-                    orientation = HORIZONTAL
-                    setHorizontalGravity(Gravity.END)
-                    addView(Button(context).apply {
-                        text = getString(R.string.share_crash_url)
-                        val typedArrayDark = requireActivity().obtainStyledAttributes(
-                            intArrayOf(android.R.attr.selectableItemBackground)
-                        )
-                        background = typedArrayDark.getDrawable(0)
-                        typedArrayDark.recycle()
-                        setOnClickListener {
-                            DogbinUtils.upload(message, object : DogbinUtils.UploadResultCallback {
-                                override fun onSuccess(url: String) {
-                                    this@BottomSheet.dismiss()
-                                    val sendIntent: Intent = Intent().apply {
-                                        action = Intent.ACTION_SEND
-                                        putExtra(Intent.EXTRA_TEXT, url)
-                                        type = "text/plain"
-                                    }
-                                    startActivity(
-                                        Intent.createChooser(
-                                            sendIntent,
-                                            getString(R.string.send_to)
-                                        )
-                                    )
-                                }
-
-                                override fun onFail(message: String, e: Exception) {
-                                    dialog?.dismiss()
-                                    Logger.log(
-                                        Logger.Companion.Type.ERROR,
-                                        "Dogbin Upload",
-                                        Log.getStackTraceString(e)
-                                    )
-                                }
-                            })
-                        }
-                    })
-                    addView(Button(context).apply {
-                        text = getString(android.R.string.ok)
-                        val typedArrayDark = requireActivity().obtainStyledAttributes(
-                            intArrayOf(android.R.attr.selectableItemBackground)
-                        )
-                        background = typedArrayDark.getDrawable(0)
-                        typedArrayDark.recycle()
-                        setOnClickListener {
-                            this@BottomSheet.dismiss()
-                        }
-                    })
-                })
             }
-        }
-
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme)
         }
 
         class LineBottomSheet(
@@ -388,14 +337,6 @@ class Logs : Fragment() {
                         })
                     })
                 }
-            }
-
-            override fun onCreate(savedInstanceState: Bundle?) {
-                super.onCreate(savedInstanceState)
-                setStyle(
-                    STYLE_NORMAL,
-                    R.style.CustomBottomSheetDialogTheme
-                )
             }
         }
 
